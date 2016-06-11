@@ -1,4 +1,13 @@
+import {Component} from 'angular2/core';
 import {bootstrap} from 'angular2/platform/browser';
-import {AppComponent} from './app.component';
+
+@Component({
+    selector: 'my-app',
+    template: `<h1>Template de Angular 2</h1>`
+})
+
+class AppComponent{
+    
+}
 
 bootstrap(AppComponent);
