@@ -1,19 +1,21 @@
-var gulp = require('gulp'),
-    webserver = require('gulp-webserver'),
-    typescript = require('gulp-typescript'),
-    sourcemaps = require('gulp-sourcemaps'),
-    tscConfig = require('./tsconfig.json');
+var gulp =        require('gulp'),
+    webserver =   require('gulp-webserver'),
+    typescript =  require('gulp-typescript'),
+    sass =        require('gulp-sass'),
+    sourcemaps =  require('gulp-sourcemaps'),
+    tscConfig =   require('./tsconfig.json');
 
 var appSrc = 'builds/development/',
-    tsSrc = 'process/typescript/';
+    tsSrc = 'process/typescript/',
+    sassSrc = 'process/sass/';
 
 gulp.task('html', function() {
   gulp.src(appSrc + '**/*.html');
 });
 
-gulp.task('css', function() {
-  gulp.src(appSrc + '**/*.css');
-});
+// gulp.task('css', function() {
+//   gulp.src(appSrc + '**/*.css');
+// });
 
 gulp.task('copylibs', function() {
   return gulp
@@ -37,9 +39,18 @@ gulp.task('typescript', function () {
     .pipe(gulp.dest(appSrc + 'js/'));
 });
 
+gulp.task('sass', function () {
+  return gulp.src(sassSrc + '**/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest( appSrc + 'css/'));
+});
+
 gulp.task('watch', function() {
   gulp.watch(tsSrc + '**/*.ts', ['typescript']);
-  gulp.watch(appSrc + 'css/*.css', ['css']);
+  gulp.watch(sassSrc + '**/*.scss', ['sass']);
+  // gulp.watch(appSrc + 'css/*.css', ['css']);
   gulp.watch(appSrc + '**/*.html', ['html']);
 });
 
@@ -51,4 +62,4 @@ gulp.task('webserver', function() {
     }));
 });
 
-gulp.task('default', ['copylibs', 'typescript', 'watch', 'webserver']);
+gulp.task('default', ['copylibs', 'typescript', 'sass', 'watch', 'webserver']);
